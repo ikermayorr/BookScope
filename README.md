@@ -2,43 +2,34 @@
 
 Proyecto académico de scraping y análisis de libros con **Requests, BeautifulSoup, Pandas, Plotly y Streamlit**.
 
-## 1. Requisitos
+## Requisitos
 
 - Python 3.10 o superior.
 - Conexión a Internet para consultar Books to Scrape.
-- Instalar dependencias:
+- Instalar las dependencias:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-## 2. Ejecutar el scraping
+## Ejecutar el scraping
 
-Desde la carpeta raíz del proyecto:
-
-```bash
-python scraper.py --max-pages 5 --delay 1.2
-```
-
-Cada página contiene aproximadamente 20 libros. Por defecto se consultan 5 páginas y se guarda el resultado en `data/libros.csv`.
-
-Para ampliar la extracción:
+Desde la carpeta raíz, ejecuta:
 
 ```bash
-python scraper.py --max-pages 10 --delay 1.5
+python scraper.py
 ```
 
-El programa:
-1. Consulta `robots.txt` antes de iniciar.
-2. Identifica las peticiones con un User-Agent propio.
-3. Utiliza pausas entre las peticiones.
-4. Extrae título, precio, disponibilidad, valoración, categoría y enlaces.
-5. Convierte los precios a números, transforma las valoraciones a escala numérica, limpia espacios y elimina duplicados.
-6. Guarda el resultado en CSV con Pandas.
+Por defecto, el scraper intenta recopilar **100 libros** y guarda los resultados en `data/libros.csv`. Puedes indicar otra cantidad y el tiempo de espera entre peticiones:
 
-El scraper consulta la ficha de cada libro para obtener su categoría. Por respeto al servidor, no reduzcas el retardo configurado.
+```bash
+python scraper.py --target-books 100 --delay 1.0
+python scraper.py --target-books 150 --delay 1.5
+```
 
-## 3. Ejecutar el dashboard
+El retardo mínimo permitido es de 0,5 segundos. El scraper comprueba `robots.txt`, se identifica con un User-Agent propio, recorre las páginas de categorías y evita duplicados por URL. Extrae título, precio, disponibilidad, valoración, categoría y enlaces; después limpia los datos y los guarda en CSV. No visita las fichas individuales de cada libro.
+
+## Ejecutar el dashboard
 
 Después de generar el CSV:
 
@@ -46,17 +37,9 @@ Después de generar el CSV:
 streamlit run app.py
 ```
 
-Streamlit abrirá el dashboard en el navegador. Incluye:
-- Filtro múltiple por categoría.
-- Rango de precios.
-- Filtro por valoración.
-- Indicadores de cantidad y medias.
-- Gráfico de precio medio por categoría.
-- Dispersión de precio frente a valoración.
-- Histograma de precios.
-- Tabla interactiva y descarga de los resultados filtrados.
+El dashboard permite filtrar por categoría, precio y valoración; muestra indicadores y gráficos de precios y valoraciones; y ofrece una tabla interactiva con descarga de los resultados filtrados.
 
-## 4. Estructura
+## Estructura
 
 ```text
 Proyecto_Scraping_Streamlit/
@@ -65,16 +48,17 @@ Proyecto_Scraping_Streamlit/
 ├── requirements.txt
 ├── README.md
 └── data/
-    └── .gitkeep
+    ├── .gitkeep
+    └── libros.csv
 ```
 
-`data/libros.csv` se crea al ejecutar `scraper.py`; no se incluyen datos inventados.
+El repositorio incluye `data/libros.csv` con los 100 registros recopilados para que el dashboard pueda abrirse directamente. Ejecutar el scraper vuelve a generar ese archivo.
 
-## 5. Ética y limitaciones
+## Ética y limitaciones
 
-Books to Scrape es un sitio de demostración para practicar scraping. Aun así, el programa comprueba `robots.txt`, se identifica, aplica pausas y limita el número de páginas. Antes de adaptar el scraper a otra web, revisa sus términos de uso y sus reglas de acceso automatizado. No recopiles datos personales ni contenido protegido sin autorización.
+Books to Scrape es un sitio de demostración para practicar scraping. Aun así, el programa comprueba `robots.txt`, se identifica, aplica pausas y limita la cantidad solicitada. Antes de adaptar el scraper a otra web, revisa sus términos de uso y sus reglas de acceso automatizado. No recopiles datos personales ni contenido protegido sin autorización.
 
-## 6. Preguntas para defender la práctica
+## Preguntas para defender la práctica
 
 **¿Qué hace BeautifulSoup?**  
 Analiza el HTML descargado y permite localizar elementos mediante selectores CSS.
@@ -106,17 +90,13 @@ Muestra cómo se distribuyen los precios frente a las valoraciones. Permite obse
 **¿Por qué se convierte el precio a float?**  
 Para poder calcular medias, máximos, mínimos y filtrar por rangos numéricos.
 
-## 7. Entrega en GitHub
+## Actualizar el proyecto en GitHub
 
-Crea un repositorio y sube los archivos del proyecto. No es necesario subir el entorno virtual. Incluye el CSV generado si el profesor quiere comprobar los datos extraídos.
+El repositorio está en [github.com/ikermayorr/BookScope](https://github.com/ikermayorr/BookScope). Después de clonar el proyecto y hacer cambios, puedes publicarlos así:
 
 ```bash
-git init
-git add .
-git commit -m "Proyecto de scraping y dashboard con Streamlit"
-git branch -M main
-git remote add origin URL_DE_TU_REPOSITORIO
-git push -u origin main
+git add README.md
+git commit -m "Update BookScope documentation"
+git push origin main
 ```
 
-Antes de entregar, ejecuta el scraper y el dashboard en tu equipo y comprueba que los datos se cargan correctamente.
